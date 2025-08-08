@@ -426,6 +426,7 @@ func profileCreateHandler(res *mux.ResponseWriter, req *mux.Request) {
 	connectionLink := txlink.Realm("gno.land/r/demo/profile").Call("SetStringField", "DisplayName", "New User")
 	out += "🔗 " + md.Bold(md.Link(("Connection"), connectionLink)) + "\n\n"
 
+	out += md.Blockquote("field = DisplayName \n\n value = Your name profile") + "\n\n"
 	out += md.Italic("This will create a basic profile with the display name 'New User'.") + "\n\n"
 
 	res.Write(out)
