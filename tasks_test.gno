@@ -197,3 +197,51 @@ func TestTaskValidation(t *testing.T) {
 		})
 	}
 }
+
+func TestCompleteTaskLogic(t *testing.T) {
+	resetTaskTestState()
+
+	adminAddr := testutils.TestAddress("admin")
+	userAddr := testutils.TestAddress("user")
+
+	// Create test organization and task
+	createTestOrganization(1, adminAddr)
+
+	task := &Task{
+		ID:             1,
+		OrganizationID: 1,
+		Title:          "Test Task",
+		Status:         TaskAssigned,
+		Assignee:       userAddr,
+		KanbanStatus:   KanbanInProgress,
+	}
+	tasks.Set("1", task)
+
+	// Simulate task completion logic
+	if task.Status != TaskAssigned {
+		t.Fatal("Task should be assigned before completion")
+	}
+
+	retrievedOrg := getOrganization(task.OrganizationID)
+	if retrievedOrg == nil {
+		t.Fatal("Organization should exist")
+	}
+
+	if retrievedOrg.Admin != adminAddr {
+		t.Fatal("Only admin should be able to complete task")
+	}
+
+	// Complete the task
+	task.Status = TaskCompleted
+	task.KanbanStatus = KanbanDone
+	tasks.Set("1", task)
+
+	// Verify completion
+	completedTask := getTask(1)
+	if completedTask.Status != TaskCompleted {
+		t.Errorf("Expected status TaskCompleted, got %d", completedTask.Status)
+	}
+	if completedTask.KanbanStatus != KanbanDone {
+		t.Errorf("Expected kanban status KanbanDone, got %d", completedTask.KanbanStatus)
+	}
+}
