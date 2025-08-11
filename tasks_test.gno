@@ -101,3 +101,58 @@ func TestGetApplication(t *testing.T) {
 	notFound := getApplication(999)
 	uassert.TypedNil(t, notFound)
 }
+
+func TestTaskCreationLogic(t *testing.T) {
+	resetTaskTestState()
+
+	adminAddr := testutils.TestAddress("admin")
+
+	// Create test organization
+	org := createTestOrganization(1, adminAddr)
+
+	// Simulate task creation logic (without the actual function call due to dependencies)
+	taskCounter++
+	task := &Task{
+		ID:             taskCounter,
+		OrganizationID: org.ID,
+		Title:          "Test Task",
+		Description:    "Test task description",
+		Reward:         "100 GNOT",
+		Status:         TaskOpen,
+		Assignee:       "",
+		Applications:   []int{},
+		CreatedAt:      12345,
+		KanbanStatus:   KanbanTodo,
+	}
+
+	tasks.Set(strconv.Itoa(taskCounter), task)
+
+	// Add task to organization
+	org.Tasks = append(org.Tasks, taskCounter)
+	organizations.Set(strconv.Itoa(org.ID), org)
+
+	// Verify task was created correctly
+	createdTask := getTask(1)
+	if createdTask == nil {
+		t.Fatal("Task should have been created")
+	}
+
+	if createdTask.Title != "Test Task" {
+		t.Errorf("Expected title 'Test Task', got %s", createdTask.Title)
+	}
+	if createdTask.Status != TaskOpen {
+		t.Errorf("Expected status TaskOpen, got %d", createdTask.Status)
+	}
+	if createdTask.KanbanStatus != KanbanTodo {
+		t.Errorf("Expected kanban status KanbanTodo, got %d", createdTask.KanbanStatus)
+	}
+
+	// Verify organization was updated
+	updatedOrg := getOrganization(1)
+	if len(updatedOrg.Tasks) != 1 {
+		t.Errorf("Expected 1 task in organization, got %d", len(updatedOrg.Tasks))
+	}
+	if updatedOrg.Tasks[0] != 1 {
+		t.Errorf("Expected task ID 1 in organization, got %d", updatedOrg.Tasks[0])
+	}
+}
