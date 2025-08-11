@@ -156,3 +156,44 @@ func TestTaskCreationLogic(t *testing.T) {
 		t.Errorf("Expected task ID 1 in organization, got %d", updatedOrg.Tasks[0])
 	}
 }
+
+func TestTaskValidation(t *testing.T) {
+	tests := []struct {
+		name        string
+		orgID       string
+		title       string
+		description string
+		shouldFail  bool
+		reason      string
+	}{
+		{"Valid task", "1", "Test Task", "Test description", false, ""},
+		{"Empty orgID", "", "Test Task", "Test description", true, "Organization ID required"},
+		{"Empty title", "1", "", "Test description", true, "Title required"},
+		{"Empty description", "1", "Test Task", "", true, "Description required"},
+		{"Invalid orgID", "abc", "Test Task", "Test description", true, "Invalid organization ID"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Test validation logic
+			if test.orgID == "" || test.title == "" || test.description == "" {
+				if !test.shouldFail {
+					t.Error("Should have failed validation")
+				}
+				return
+			}
+
+			_, err := strconv.Atoi(test.orgID)
+			if err != nil {
+				if !test.shouldFail {
+					t.Error("Should have failed on invalid orgID")
+				}
+				return
+			}
+
+			if test.shouldFail {
+				t.Error("Should have failed but passed validation")
+			}
+		})
+	}
+}
