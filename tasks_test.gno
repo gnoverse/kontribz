@@ -496,5 +496,3 @@ func TestRejectApplicationLogic(t *testing.T) {
 		t.Errorf("Expected status AppRejected, got %d", rejectedApp.Status)
 	}
 }
-
-// Removed TestApplicationStatusTransitions and TestTaskCounterIncrement - these don't test real business logic
