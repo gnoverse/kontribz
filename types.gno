@@ -1,6 +1,5 @@
 package kontribz
 
-import "std"
 
 
 type Organization struct {
@@ -10,7 +9,7 @@ type Organization struct {
 	Domain    string
 	Bio       string
 	Website   string
-	Admin     std.Address
+	Admin     address
 	Tasks     []int // task IDs
 	CreatedAt int64
 }
@@ -23,7 +22,7 @@ type Task struct {
 	Description    string
 	Reward         string
 	Status         TaskStatus
-	Assignee       std.Address
+	Assignee       address
 	Applications   []int // application IDs
 	CreatedAt      int64
 	KanbanStatus   KanbanStatus // for kanban tracking
@@ -33,7 +32,7 @@ type Task struct {
 type Application struct {
 	ID        int
 	TaskID    int
-	Applicant std.Address
+	Applicant address
 	Message   string
 	Status    ApplicationStatus
 	AppliedAt int64

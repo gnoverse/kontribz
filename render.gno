@@ -1,10 +1,10 @@
 package kontribz
 
 import (
-	"std"
+	"chain/runtime"
 	"strconv"
 
-	"gno.land/p/demo/mux"
+	"gno.land/p/nt/mux"
 	"gno.land/p/moul/md"
 	"gno.land/p/moul/txlink"
 	"gno.land/r/demo/profile"
@@ -40,7 +40,7 @@ func userHandler(res *mux.ResponseWriter, req *mux.Request) {
 	var out string
 
 	addrStr := req.GetVar("addr")
-	addr := std.Address(addrStr)
+	addr := address(addrStr)
 
 	// Get profile info
 	name := profile.GetStringField(addr, "DisplayName", "Unknown")
@@ -150,7 +150,7 @@ func userKanbanHandler(res *mux.ResponseWriter, req *mux.Request) {
 	var out string
 
 	addrStr := req.GetVar("addr")
-	addr := std.Address(addrStr)
+	addr := address(addrStr)
 
 	// Get profile info
 	name := profile.GetStringField(addr, "DisplayName", "Unknown")
@@ -162,7 +162,7 @@ func userKanbanHandler(res *mux.ResponseWriter, req *mux.Request) {
 	out += renderUserKanban(addr)
 
 	// Admin actions if viewing own kanban
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 	if caller == addr {
 		out += md.H2("⚙️ Kanban Actions") + "\n\n"
 		out += md.Italic("Update kanban status for your assigned tasks:") + "\n\n"
@@ -315,7 +315,7 @@ func organizationHandler(res *mux.ResponseWriter, req *mux.Request) {
 		out += md.BulletList(taskItems) + "\n\n"
 	}
 
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 	if caller == org.Admin {
 		out += md.H2("⚙️ Admin Actions") + "\n\n"
 
@@ -616,7 +616,7 @@ func taskHandler(res *mux.ResponseWriter, req *mux.Request) {
 	// Applications section
 	out += md.H2("📨 Applications ("+strconv.Itoa(len(task.Applications))+")") + "\n\n"
 
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 
 	// Show apply button if task is open and user hasn't applied
 	if task.Status == TaskOpen {
@@ -739,7 +739,7 @@ func usersHandler(res *mux.ResponseWriter, req *mux.Request) {
 
 	// Display users
 	for addrStr := range userSet {
-		addr := std.Address(addrStr)
+		addr := address(addrStr)
 		name := profile.GetStringField(addr, "DisplayName", "Unknown")
 
 		out += md.HorizontalRule() + "\n\n"
