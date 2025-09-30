@@ -1,7 +1,7 @@
 package kontribz
 
 import (
-	"std"
+	"chain/runtime"
 	"strconv"
 
 	"gno.land/r/demo/profile"
@@ -9,7 +9,7 @@ import (
 
 
 func CreateOrganization(cur realm, name, domain, bio, website, avatar string) {
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 
 	if name == "" || domain == "" {
 		panic("Name and domain are required")
@@ -30,7 +30,7 @@ func CreateOrganization(cur realm, name, domain, bio, website, avatar string) {
 		Website:   website,
 		Admin:     caller,
 		Tasks:     []int{},
-		CreatedAt: std.ChainHeight(),
+		CreatedAt: runtime.ChainHeight(),
 	}
 
 	organizations.Set(strconv.Itoa(orgCounter), org)
@@ -44,7 +44,7 @@ func getOrganization(orgID int) *Organization {
 	return orgI.(*Organization)
 }
 
-func getUserOrganizations(addr std.Address) []*Organization {
+func getUserOrganizations(addr address) []*Organization {
 	var userOrgs []*Organization
 
 	organizations.Iterate("", "", func(key string, value interface{}) bool {

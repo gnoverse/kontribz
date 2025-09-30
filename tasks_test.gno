@@ -1,13 +1,12 @@
 package kontribz
 
 import (
-	"std"
 	"strconv"
 	"testing"
 
-	"gno.land/p/demo/avl"
-	"gno.land/p/demo/testutils"
-	"gno.land/p/demo/uassert"
+	"gno.land/p/nt/avl"
+	"gno.land/p/nt/testutils"
+	"gno.land/p/nt/uassert"
 )
 
 // Test helper function to reset global state
@@ -21,7 +20,7 @@ func resetTaskTestState() {
 }
 
 // Helper to create test organization
-func createTestOrganization(id int, admin std.Address) *Organization {
+func createTestOrganization(id int, admin address) *Organization {
 	org := &Organization{
 		ID:        id,
 		Name:      "Test Org " + strconv.Itoa(id),
@@ -259,7 +258,7 @@ func TestUpdateKanbanStatusLogic(t *testing.T) {
 
 	tests := []struct {
 		name         string
-		caller       std.Address
+		caller       address
 		targetStatus KanbanStatus
 		shouldFail   bool
 		reason       string

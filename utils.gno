@@ -3,7 +3,6 @@ package kontribz
 import (
 	"strconv"
 	"strings"
-    "std"
 
 	"gno.land/p/moul/md"
 	"gno.land/r/demo/profile"
@@ -60,7 +59,7 @@ func max(a, b int) int {
 }
 
 // Kanban rendering functions
-func renderUserKanbanPreview(addr std.Address) string {
+func renderUserKanbanPreview(addr address) string {
 	var out string
 
 	// Collect user's assigned tasks
@@ -107,7 +106,7 @@ func renderUserKanbanPreview(addr std.Address) string {
 	return out
 }
 
-func renderUserKanban(addr std.Address) string {
+func renderUserKanban(addr address) string {
 	var out string
 
 	// Collect user's assigned tasks

@@ -1,13 +1,13 @@
 package kontribz
 
 import (
-	"std"
+	"chain/runtime"
 	"strconv"
 )
 
 // CreateTask creates a new task for an organization
 func CreateTask(cur realm, orgIDStr, title, description, reward string) {
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 
 	if orgIDStr == "" || title == "" || description == "" {
 		panic("Organization ID, title and description are required")
@@ -37,7 +37,7 @@ func CreateTask(cur realm, orgIDStr, title, description, reward string) {
 		Status:         TaskOpen,
 		Assignee:       "",
 		Applications:   []int{},
-		CreatedAt:      std.ChainHeight(),
+		CreatedAt:      runtime.ChainHeight(),
 		KanbanStatus:   KanbanTodo, // Default kanban status
 	}
 
@@ -50,7 +50,7 @@ func CreateTask(cur realm, orgIDStr, title, description, reward string) {
 
 // CompleteTask marks a task as completed by the organization admin
 func CompleteTask(cur realm, taskIDStr string) {
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 
 	taskID, err := strconv.Atoi(taskIDStr)
 	if err != nil {
@@ -83,7 +83,7 @@ func CompleteTask(cur realm, taskIDStr string) {
 // updates the kanban status of an assigned task
 // Assignee can update all statuses
 func UpdateKanbanStatus(cur realm, taskIDStr, statusIDStr string) {
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 
 	if taskIDStr == "" || statusIDStr == "" {
 		panic("Task ID and status are required")
@@ -134,7 +134,7 @@ func UpdateKanbanStatus(cur realm, taskIDStr, statusIDStr string) {
 
 // ApplyToTask creates an application for a task
 func ApplyToTask(cur realm, taskIDStr, message string) {
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 
 	if taskIDStr == "" {
 		panic("Task ID is required")
@@ -170,7 +170,7 @@ func ApplyToTask(cur realm, taskIDStr, message string) {
 		Applicant: caller,
 		Message:   message,
 		Status:    AppPending,
-		AppliedAt: std.ChainHeight(),
+		AppliedAt: runtime.ChainHeight(),
 	}
 
 	applications.Set(strconv.Itoa(appCounter), application)
@@ -182,7 +182,7 @@ func ApplyToTask(cur realm, taskIDStr, message string) {
 
 // Accepts a pending application and assigns the task
 func AcceptApplication(cur realm, appIDStr string) {
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 
 	if appIDStr == "" {
 		panic("Application ID is required")
@@ -240,7 +240,7 @@ func AcceptApplication(cur realm, appIDStr string) {
 
 // Rejects a pending application
 func RejectApplication(cur realm, appIDStr string) {
-	caller := std.OriginCaller()
+	caller := runtime.OriginCaller()
 
 	if appIDStr == "" {
 		panic("Application ID is required")

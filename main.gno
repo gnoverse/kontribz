@@ -1,8 +1,8 @@
 package kontribz
 
 import (
-	"gno.land/p/demo/avl"
-	"gno.land/p/demo/mux"
+	"gno.land/p/nt/avl"
+	"gno.land/p/nt/mux"
 )
 
 var (
